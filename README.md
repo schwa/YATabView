@@ -32,3 +32,5 @@ swift package add-target-dependency YATabView <your-target-name>
     }
 }
 ```
+
+`YATabView` is made uses a `YAPicker` to control the tab selection. `YAPicker` can be somewhat configured by implementing the `YAPickerCellStyle` and setting it with the `.yaPickerCellStyle()` modifier.
