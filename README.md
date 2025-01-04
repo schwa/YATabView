@@ -1,31 +1,14 @@
 # YATabView
-# YATabView
 
-YATabView is a SwiftUI library that provides customizable tab views and pickers for macOS and iOS applications. It allows you to create tabbed interfaces with ease, supporting various customization options.
+Yet Another SwiftUI TabView and Picker replacement.
 
-## Features
+`YATabView` is inspired by the Xcode inspector style tab view. `YAPicker` came along for the ride.
 
-- Customizable tab views
-- Customizable pickers
-- Support for macOS and iOS
-- SwiftUI integration
+`YATabView` emulates `TabView`'s API. But currently all tabs need a `.tag()` modifier added _and_ the tab view must support a `selection` binding. This is a limitation of the current implementation and can be improved in the future.
 
 ## Installation
 
-To install YATabView, add it to your `Package.swift` file:
-
-```swift
-// swift-tools-version: 6.0
-import PackageDescription
-
-let package = Package(
-    name: "YourProjectName",
-    dependencies: [
-        .package(url: "https://github.com/yourusername/YATabView.git", from: "1.0.0")
-    ],
-    targets: [
-        .target(
-            name: "YourTargetName",
-            dependencies: ["YATabView"])
-    ]
-)
+```sh
+swift package add-dependency https://github.com/schwa/YATabView --branch main
+swift package add-target-dependency YATabView <your-target-name>
+```
