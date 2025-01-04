@@ -130,6 +130,20 @@ public extension View {
     @Previewable @State
     var selection: Int? = 1
 
+    YATabView(selection: $selection) {
+        Text("String-1")
+        .tag(1)
+        .yaTabItem { Image(systemName: "1.circle") }
+        Text("String-2")
+        .tag(2)
+        .yaTabItem { Image(systemName: "2.circle") }
+    }
+}
+
+#Preview {
+    @Previewable @State
+    var selection: Int? = 1
+
     let tabView = YATabView(selection: $selection) {
         MeshGradient(width: 2, height: 2, points: [
             [0, 0], [1, 0], [0, 1], [1, 1]
