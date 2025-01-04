@@ -6,6 +6,8 @@ Yet Another SwiftUI TabView and Picker replacement.
 
 `YATabView` emulates `TabView`'s API. But currently all tabs need a `.tag()` modifier added _and_ the tab view must support a `selection` binding. This is a limitation of the current implementation and can be improved in the future.
 
+![alt text](<Documentation/Screenshot 2025-01-03 at 23.18.12.png>)
+
 ## Installation
 
 ```sh

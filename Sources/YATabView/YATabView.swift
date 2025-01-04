@@ -125,3 +125,35 @@ public extension View {
 
  }
  */
+
+#Preview {
+    @Previewable @State
+    var selection: Int? = 1
+
+    let tabView = YATabView(selection: $selection) {
+        MeshGradient(width: 2, height: 2, points: [
+            [0, 0], [1, 0], [0, 1], [1, 1]
+        ], colors: [.red, .green, .blue, .yellow])
+        .padding()
+        .tag(1)
+        .yaTabItem { Label("Document", systemImage: "document") }
+
+        MeshGradient(width: 2, height: 2, points: [
+            [0, 0], [1, 0], [0, 1], [1, 1]
+        ], colors: [.purple, .orange, .pink, .brown])
+        .padding()
+        .tag(2)
+        .yaTabItem { Label("Clock", systemImage: "clock") }
+
+        MeshGradient(width: 2, height: 2, points: [
+            [0, 0], [1, 0], [0, 1], [1, 1]
+        ], colors: [.yellow, .green, .blue, .red])
+        .padding()
+        .tag(3)
+        .yaTabItem { Label("Question", systemImage: "questionmark.circle") }
+    }
+    ContentUnavailableView("Your content here", image: "questionmark.circle")
+        .inspector(isPresented: .constant(true)) {
+            tabView
+        }
+}
