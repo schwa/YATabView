@@ -1,7 +1,6 @@
 import SwiftUI
 
 public struct YATabView <SelectionValue, Content>: View where SelectionValue: Hashable, Content: View {
-
     @Binding
     var selection: SelectionValue?
 
@@ -12,7 +11,7 @@ public struct YATabView <SelectionValue, Content>: View where SelectionValue: Ha
             YAPicker(selection: $selection) {
                 ForEach(subviews: content) { subview in
                     subview.containerValues[keyPath: \.yaTabItem]
-                    .tag(subview.containerValues.tag(for: SelectionValue.self))
+                        .tag(subview.containerValues.tag(for: SelectionValue.self))
                 }
             }
             .labelsHidden()
@@ -63,66 +62,66 @@ public extension View {
 // MARK: -
 
 /*
-extension YATabView where SelectionValue == Int {
-    init(@ViewBuilder content: () -> Content) {
-        fatalError()
-    }
-}
+ extension YATabView where SelectionValue == Int {
+ init(@ViewBuilder content: () -> Content) {
+ fatalError()
+ }
+ }
 
-extension YATabView {
-    init<C>(@XCTabContentBuilder<Never> content: () -> C) where SelectionValue == Never, Content == XCTabContentBuilder<Never>.Content<C>, C: XCTabContent {
-//        self.init(selection: .constant(nil), content: content)
-        fatalError()
-    }
-}
-
-
-@MainActor @preconcurrency
-public protocol XCTabContent<TabValue> {
-    associatedtype TabValue: Hashable where TabValue == Body.TabValue
-    associatedtype Body: TabContent
-
-    @TabContentBuilder<TabValue>
-    @MainActor @preconcurrency var body: Self.Body { get }
-}
+ extension YATabView {
+ init<C>(@XCTabContentBuilder<Never> content: () -> C) where SelectionValue == Never, Content == XCTabContentBuilder<Never>.Content<C>, C: XCTabContent {
+ //        self.init(selection: .constant(nil), content: content)
+ fatalError()
+ }
+ }
 
 
-@resultBuilder
-struct XCTabContentBuilder <TabValue> where TabValue: Hashable {
+ @MainActor @preconcurrency
+ public protocol XCTabContent<TabValue> {
+ associatedtype TabValue: Hashable where TabValue == Body.TabValue
+ associatedtype Body: TabContent
 
-    public struct Content<C> : View where C: XCTabContent {
-        public var body: some View {
-            fatalError()
-        }
-    }
-
-
-    public static func buildExpression(_ content: some TabContent<TabValue>) -> some TabContent<TabValue> {
-        content
-    }
+ @TabContentBuilder<TabValue>
+ @MainActor @preconcurrency var body: Self.Body { get }
+ }
 
 
-    public static func buildBlock(_ content: some TabContent<TabValue>) -> some TabContent<TabValue> {
-        content
-    }
+ @resultBuilder
+ struct XCTabContentBuilder <TabValue> where TabValue: Hashable {
+
+ public struct Content<C> : View where C: XCTabContent {
+ public var body: some View {
+ fatalError()
+ }
+ }
 
 
-    public static func buildIf(_ content: (some TabContent<TabValue>)?) -> (some TabContent<TabValue>)? {
-        content
-    }
+ public static func buildExpression(_ content: some TabContent<TabValue>) -> some TabContent<TabValue> {
+ content
+ }
 
 
-    public static func buildEither<T, F>(first: T) -> _ConditionalContent<T, F> where TabValue == T.TabValue, T : TabContent, F : TabContent, T.TabValue == F.TabValue {
-        fatalError()
-    }
+ public static func buildBlock(_ content: some TabContent<TabValue>) -> some TabContent<TabValue> {
+ content
+ }
 
-    public static func buildEither<T, F>(second: F) -> _ConditionalContent<T, F> where TabValue == T.TabValue, T : TabContent, F : TabContent, T.TabValue == F.TabValue {
-        fatalError()
-    }
 
-    public static func buildLimitedAvailability<T>(_ content: T) -> AnyTabContent<T.TabValue> where T : TabContent {
-        fatalError()
-    }
+ public static func buildIf(_ content: (some TabContent<TabValue>)?) -> (some TabContent<TabValue>)? {
+ content
+ }
 
-}
-*/
+
+ public static func buildEither<T, F>(first: T) -> _ConditionalContent<T, F> where TabValue == T.TabValue, T : TabContent, F : TabContent, T.TabValue == F.TabValue {
+ fatalError()
+ }
+
+ public static func buildEither<T, F>(second: F) -> _ConditionalContent<T, F> where TabValue == T.TabValue, T : TabContent, F : TabContent, T.TabValue == F.TabValue {
+ fatalError()
+ }
+
+ public static func buildLimitedAvailability<T>(_ content: T) -> AnyTabContent<T.TabValue> where T : TabContent {
+ fatalError()
+ }
+
+ }
+ */

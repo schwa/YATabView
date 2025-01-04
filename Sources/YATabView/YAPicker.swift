@@ -1,11 +1,13 @@
 import SwiftUI
 
 public struct YAPicker <Label, SelectionValue, Content>: View where Label: View, SelectionValue: Hashable, Content: View {
-
     private var label: Label?
 
     @Binding
     private var selection: SelectionValue?
+
+    @Environment(\.yaPickerCellStyle)
+    var cellStyle
 
     private var content: Content
 
@@ -16,29 +18,36 @@ public struct YAPicker <Label, SelectionValue, Content>: View where Label: View,
     }
 
     public var body: some View {
-        HStack(spacing: 16) {
-            ForEach(subviews: content) { subview in
-                if let tag = subview.containerValues.tag(for: SelectionValue?.self) {
-                    let binding = Binding<Bool> {
-                        tag == selection
-                    } set: { value, _ in
-                        if value == true {
-                            selection = tag
-                        } else {
-                            selection = nil
+        ViewThatFits {
+            ForEach([16, 4], id: \.self) { spacing in
+                HStack(spacing: spacing) {
+                    ForEach(subviews: content) { subview in
+                        if let tag = subview.containerValues.tag(for: SelectionValue?.self) {
+                            view(for: tag, subview: subview)
                         }
                     }
-                    Toggle(isOn: binding) {
-                        subview
-                    }
-                    .toggleStyle(.button)
-                    .buttonStyle(.borderless)
-                    .labelsHidden()
-                    .labelStyle(.iconOnly)
-                    .symbolVariant(tag == selection ? .fill : .none)
                 }
+                .padding([.leading, .trailing], 4)
             }
         }
+        .accessibilityRepresentation {
+            Picker(selection: $selection, content: { content }, label: { label })
+        }
+    }
+
+    @ViewBuilder
+    func view(for tag: SelectionValue?, subview: Subview) -> some View {
+        let binding = Binding<Bool> {
+            tag == selection
+        } set: { value, _ in
+            if value == true {
+                selection = tag
+            } else {
+                selection = nil
+            }
+        }
+        let configuration = YAPickerCellStyleConfiguration(isOn: binding, content: .init(content: subview))
+        AnyView(cellStyle.makeBody(configuration: configuration))
     }
 }
 
@@ -66,6 +75,63 @@ public extension YAPicker where Label == Never {
         self.init(label: nil, selection: selection.makeOptional(), content: content())
     }
 }
+
+// MARK: -
+
+public struct YAPickerCellStyleConfiguration {
+    public struct Content: View {
+        private var content: any View
+
+        internal init(content: some View) {
+            self.content = content
+        }
+
+        public var body: some View {
+            AnyView(content)
+        }
+    }
+
+    @Binding
+    internal var isOn: Bool
+
+    internal var content: Content
+
+    internal init(isOn: Binding<Bool>, content: Content) {
+        self._isOn = isOn
+        self.content = content
+    }
+}
+
+public protocol YAPickerCellStyle {
+    associatedtype Body: View
+    @ViewBuilder @MainActor /*@preconcurrency*/ func makeBody(configuration: Configuration) -> Body
+    typealias Configuration = YAPickerCellStyleConfiguration
+}
+
+public struct DefaultYAPickerCellStyle: YAPickerCellStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        Toggle(isOn: configuration.$isOn) {
+            AnyView(configuration.content)
+        }
+        .toggleStyle(.button)
+        .buttonStyle(.borderless)
+        .labelStyle(.iconOnly)
+        .symbolVariant(configuration.isOn ? .fill : .none)
+    }
+}
+
+extension EnvironmentValues {
+    @Entry
+    var yaPickerCellStyle: (any YAPickerCellStyle) = DefaultYAPickerCellStyle()
+}
+
+public extension View {
+    func yaPickerCellStyle(_ style: some YAPickerCellStyle) -> some View {
+        environment(\.yaPickerCellStyle, style)
+    }
+}
+
+// MARK: -
 
 #Preview {
     @Previewable @State
